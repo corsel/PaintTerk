@@ -53,7 +53,8 @@ RenderableContainer *RenderableContainer::getInstance()
 }
 void RenderableContainer::appendRenderable(Renderable *argRenderable)
 {
-	renderableVector.push_back(argRenderable);
+	if (argRenderable != 0)
+		renderableVector.push_back(argRenderable);
 }
 void RenderableContainer::renderAll()
 {

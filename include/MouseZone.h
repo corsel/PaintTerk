@@ -6,9 +6,11 @@
 #include "Utils.h"
 #include "Cursor.h"
 #include "Buffer.h"
+#include "Widget.h"
 
 extern int screenWidth, screenHeight;
-class Buffer;
+class Buffer; //forward declaration
+class Widget; //forward declaration
 
 class MouseZone //abstract
 {
@@ -25,8 +27,9 @@ public:
 class RectangularMouseZone : public MouseZone
 {
 private:
+	Widget *bindedWidget;
 public:
-	RectangularMouseZone(Rectangle argZone);
+	RectangularMouseZone(Rectangle argZone, Widget *argBindedWidget = 0);
 	void clickCallback(CoordinateInteger argCoordinate = CoordinateInteger()); //virtual implementation
 };
 

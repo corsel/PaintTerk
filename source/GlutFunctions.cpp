@@ -36,7 +36,6 @@ void mouseClick(int argButton, int argState, int argX, int argY)
 void mouseMove(int argX, int argY)
 {
 	Cursor::getInstance()->setCoordinate(CoordinateInteger(argX, argY));
-	//std::cout << "passiveMouse: x: " << argX << "\ty: " << argY << std::endl;
 }
 
 void idle()

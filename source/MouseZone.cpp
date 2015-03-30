@@ -4,15 +4,14 @@
 MouseZone::MouseZone(Rectangle argZone)
 	:zone(argZone) {}
 Rectangle MouseZone::getZone() {return zone;}
-void MouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual
-{}
+void MouseZone::clickCallback(CoordinateInteger argCoordinate) {} //virtual
 
 //RectangularMouseZone Class
-RectangularMouseZone::RectangularMouseZone(Rectangle argZone)
-	:MouseZone(argZone) {}
+RectangularMouseZone::RectangularMouseZone(Rectangle argZone, Widget *argBindedWidget)
+	:MouseZone(argZone), bindedWidget(argBindedWidget) {}
 void RectangularMouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual implementation
 {
-	std::cout << "Button clicked.\n";
+	bindedWidget->clickCallback(argCoordinate);
 }
 
 //BufferMouseZone Class
@@ -24,7 +23,8 @@ BufferMouseZone::BufferMouseZone(Rectangle argZone, Buffer *argBindedBuffer)
 }
 void BufferMouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual implementation
 {
-   bindedBuffer->paintPixel(argCoordinate, Color());
+	if (Cursor::getInstance()->state == Cursor::CLICKED)
+		bindedBuffer->paintPixel(argCoordinate, Color());
 }
 
 //ZoneContainer Class
@@ -38,11 +38,12 @@ ZoneContainer *ZoneContainer::getInstance()
 }
 void ZoneContainer::appendMouseZone(MouseZone *argZone)
 {
-   zoneVector.push_back(argZone);
+	if (argZone != 0)
+		zoneVector.push_back(argZone);
 }
 MouseZone *ZoneContainer::checkClick()
 {
-	if (Cursor::getInstance()->state == Cursor::RELEASED) return 0;
+	//if (Cursor::getInstance()->state == Cursor::RELEASED) return 0;
 	CoordinateInteger coord = Cursor::getInstance()->getScreenIntCoordinate();
 	MouseZone *returnZone = 0;
 	CoordinateFloat convertedCoordinate;
