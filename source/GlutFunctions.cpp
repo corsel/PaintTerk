@@ -17,7 +17,7 @@ void init(int *argc, char **argv)
 
 void display()
 {
-	glClearColor(0.1f, 0.1f, 0.1f, 0.0f);
+	glClearColor(0.15f, 0.15f, 0.15f, 0.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
 
 	RenderableContainer::getInstance()->renderAll();
@@ -27,10 +27,20 @@ void display()
 
 void mouseClick(int argButton, int argState, int argX, int argY)
 {
-	if (argState == 1)
-		Cursor::getInstance()->state = Cursor::RELEASED;
-	else
-		Cursor::getInstance()->state = Cursor::CLICKED;
+	if (argButton == 0)
+	{
+		if (argState == 1)
+			Cursor::getInstance()->state = Cursor::RELEASED;
+		else
+			Cursor::getInstance()->state = Cursor::CLICKED;
+	}
+	else if (argButton == 2)
+	{
+		if (argState == 1)
+			Cursor::getInstance()->rightClickState = Cursor::RELEASED;
+		else
+			Cursor::getInstance()->rightClickState = Cursor::CLICKED;
+	}
 }
 
 void mouseMove(int argX, int argY)

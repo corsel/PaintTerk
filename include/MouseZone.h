@@ -15,12 +15,12 @@ class Widget; //forward declaration
 class MouseZone //abstract
 {
 protected:
-	Rectangle zone;
+	Paint::Rectangle zone;
 	int layer;
 
 public:
-	MouseZone(Rectangle argZone);
-	Rectangle getZone(void);
+	MouseZone(Paint::Rectangle argZone);
+	Paint::Rectangle getZone(void);
 	virtual void clickCallback(CoordinateInteger argCoordinate = CoordinateInteger()) = 0;
 };
 
@@ -29,7 +29,7 @@ class RectangularMouseZone : public MouseZone
 private:
 	Widget *bindedWidget;
 public:
-	RectangularMouseZone(Rectangle argZone, Widget *argBindedWidget = 0);
+	RectangularMouseZone(Paint::Rectangle argZone, Widget *argBindedWidget = 0);
 	void clickCallback(CoordinateInteger argCoordinate = CoordinateInteger()); //virtual implementation
 };
 
@@ -38,7 +38,7 @@ class BufferMouseZone : public MouseZone
 private:
 	Buffer *bindedBuffer;
 public:
-	BufferMouseZone(Rectangle argZone, Buffer *argBindedBuffer = 0);
+	BufferMouseZone(Paint::Rectangle argZone, Buffer *argBindedBuffer = 0);
 	void clickCallback(CoordinateInteger argCoordinate); //virtual implementation
 };
 

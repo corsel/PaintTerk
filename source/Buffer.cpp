@@ -11,7 +11,7 @@ Buffer::Buffer(int argWidth, int argHeight)
 	pixelSize.x = 1.6f / float(canvasSize.x);
 	pixelSize.y = 1.6f / float(canvasSize.y);
 	canvasOffset = CoordinateFloat(-0.8f, -0.8f);
-	ZoneContainer::getInstance()->appendMouseZone(new BufferMouseZone(Rectangle(-0.8f, 0.8f, -0.8f, 0.8f), this));
+	ZoneContainer::getInstance()->appendMouseZone(new BufferMouseZone(Paint::Rectangle(-0.8f, 0.8f, -0.8f, 0.8f), this));
 	RenderableContainer::getInstance()->appendRenderable(new PixelMatrix(this));
 	std::srand(std::time(0)); //Debug
 }
@@ -19,18 +19,17 @@ void Buffer::paintPixel(CoordinateInteger argCoordinate, Color argColor)
 {
 	CoordinateFloat temp = convertScreenIntToScreenFloat(argCoordinate);
 	CoordinateInteger tempIndex = convertScreenIntToBufferInt(argCoordinate, canvasOffset, canvasSize);
-	//std::cout << "Buffer::paintPixel x: " << tempIndex.x << "\ty: " << tempIndex.y << std::endl;
-	if (tempIndex.x > -1.0f && tempIndex.y > -1.0f)
+	if (tempIndex.x > -1 && tempIndex.y > -1)
 	{
-		buffer[tempIndex.x][tempIndex.y] = Color(1.0f, 0.0f, 0.0f);
-		for (int i = 0; i < Cursor::getInstance()->brushSize; i++)
+		buffer[tempIndex.x][tempIndex.y] = Cursor::color;
+		for (int i = 0; i < int(Cursor::brushSize * 10.0f); i++)
 		{
-			for (int j = 0; j < Cursor::getInstance()->brushSize; j++)
+			for (int j = 0; j < int(Cursor::brushSize * 10.0f); j++)
 			{
 				CoordinateInteger indexBrushSize;
-            indexBrushSize.x =  tempIndex.x + i;/*PaintMath<int>::clamp(tempIndex.x + i * ((i%2 == 0) ? 1 : -1), 0, canvasSize.x);*/
-            indexBrushSize.y = tempIndex.y + j;/*PaintMath<int>::clamp(tempIndex.y + j * ((j%2 == 0) ? 1 : -1), 0, canvasSize.y);*/
-            buffer[indexBrushSize.x][indexBrushSize.y] = Color(1.0f, 0.0f, 0.0f);
+				indexBrushSize.x = PaintMath<int>::clamp(tempIndex.x + i, canvasSize.x - 1, 0);
+				indexBrushSize.y = PaintMath<int>::clamp(tempIndex.y + j, canvasSize.y - 1, 0);
+				buffer[indexBrushSize.x][indexBrushSize.y] = Cursor::color;
 			}
 		}
 	}

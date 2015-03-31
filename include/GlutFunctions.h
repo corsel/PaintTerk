@@ -2,6 +2,7 @@
 #define GLUTFUNCTIONS_H_INCLUDED
 
 #include <iostream> //Debug
+#include <freeglut.h>
 #include "Buffer.h"
 #include "Cursor.h"
 #include "MouseZone.h"

@@ -1,30 +1,46 @@
 #include "MouseZone.h"
 
 //MouseZone Class
-MouseZone::MouseZone(Rectangle argZone)
+MouseZone::MouseZone(Paint::Rectangle argZone)
 	:zone(argZone) {}
-Rectangle MouseZone::getZone() {return zone;}
+Paint::Rectangle MouseZone::getZone() { return zone; }
 void MouseZone::clickCallback(CoordinateInteger argCoordinate) {} //virtual
 
 //RectangularMouseZone Class
-RectangularMouseZone::RectangularMouseZone(Rectangle argZone, Widget *argBindedWidget)
+RectangularMouseZone::RectangularMouseZone(Paint::Rectangle argZone, Widget *argBindedWidget)
 	:MouseZone(argZone), bindedWidget(argBindedWidget) {}
 void RectangularMouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual implementation
 {
-	bindedWidget->clickCallback(argCoordinate);
+	if(bindedWidget != 0)
+		bindedWidget->clickCallback(argCoordinate);
 }
 
 //BufferMouseZone Class
-BufferMouseZone::BufferMouseZone(Rectangle argZone, Buffer *argBindedBuffer)
-	:MouseZone(argZone), bindedBuffer(argBindedBuffer)
-{
-	std::cout << "BufferMouseZone constructor bindedBuffer: " << bindedBuffer << std::endl;
-	std::cout << "BufferMouseZone constructor argBindedBuffer: " << argBindedBuffer << std::endl;
-}
+BufferMouseZone::BufferMouseZone(Paint::Rectangle argZone, Buffer *argBindedBuffer)
+	:MouseZone(argZone), bindedBuffer(argBindedBuffer) {}
 void BufferMouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual implementation
 {
-	if (Cursor::getInstance()->state == Cursor::CLICKED)
-		bindedBuffer->paintPixel(argCoordinate, Color());
+	if (Cursor::getInstance()->tool == Cursor::LINESTRIP)
+	{
+		static LineStrip strip(bindedBuffer, Cursor::getInstance()->color);
+		if (Cursor::getInstance()->state == Cursor::CLICKED &&
+			Cursor::getInstance()->rightClickState == Cursor::RELEASED)
+		{
+			strip.appendVertex(CoordinateFloat(convertScreenIntToScreenFloat(argCoordinate).x, convertScreenIntToScreenFloat(argCoordinate).y));
+		}
+		if (Cursor::getInstance()->state == Cursor::RELEASED &&
+			Cursor::getInstance()->rightClickState == Cursor::CLICKED)
+		{
+			strip.rasterize();
+		}
+	}
+	else if (Cursor::getInstance()->tool == Cursor::BRUSH)
+	{
+		if (Cursor::getInstance()->state == Cursor::CLICKED)
+		{
+			bindedBuffer->paintPixel(argCoordinate, Color());
+		}
+	}
 }
 
 //ZoneContainer Class

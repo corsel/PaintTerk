@@ -14,8 +14,11 @@ private:
 	Cursor(void);
 
 public:
-	enum State {CLICKED, RELEASED}state;
-   int brushSize;
+	enum State { CLICKED, RELEASED }state, rightClickState;
+	enum Tool { BRUSH, LINESTRIP }tool;
+	static float brushSize;
+	static Color color;
+	static float alpha;
 
 	static Cursor* getInstance(void);
 	void setCoordinate(CoordinateInteger argCoord);

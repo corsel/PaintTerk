@@ -11,16 +11,21 @@ struct Color
 
 	Color();
 	Color(float argRed, float argGreen, float argBlue);
+	Color operator*(float argMultiplier);
+	Color operator+(Color argColor);
 };
-struct Rectangle
+namespace Paint
 {
-	float x1, x2;
-	float y1, y2;
+	struct Rectangle
+	{
+		float x1, x2;
+		float y1, y2;
 
-	Rectangle();
-	Rectangle(float argX1, float argX2, float argY1, float argY2);
-	Rectangle(float argOffsetX, float argOffsetY, float argPixelWidth, float argPixelHeight, int argIndexX, int argIndexY);
-};
+		Rectangle();
+		Rectangle(float argX1, float argX2, float argY1, float argY2);
+		Rectangle(float argOffsetX, float argOffsetY, float argPixelWidth, float argPixelHeight, int argIndexX, int argIndexY);
+	};
+}
 struct CoordinateFloat
 {
 	float x, y;
@@ -37,6 +42,7 @@ struct CoordinateInteger
 };
 CoordinateInteger convertScreenIntToBufferInt(CoordinateInteger argScreenCoordinate, CoordinateFloat argCanvasOffset, CoordinateInteger argCanvasSize);
 CoordinateFloat convertScreenIntToScreenFloat(CoordinateInteger argCoordinate);
+CoordinateInteger convertScreenFloatToBufferInt(CoordinateFloat argCoordinate, CoordinateFloat argCanvasOffset, CoordinateInteger argCanvasSize);
 template <typename T>
 class PaintMath
 {
@@ -54,5 +60,4 @@ public:
 		return argValue < argUpperBound ? (argValue > argLowerBound ? argValue : argLowerBound) : argUpperBound;
 	}
 };
-
 #endif //UTILS_H_INCLUDED

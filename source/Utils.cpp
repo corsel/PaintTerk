@@ -4,12 +4,28 @@
 Color::Color() {}
 Color::Color(float argRed, float argGreen, float argBlue)
 	:red(argRed), green(argGreen), blue(argBlue) {}
+Color Color::operator*(float argMultiplier)
+{
+	Color returnColor;
+	returnColor.red = red * argMultiplier;
+	returnColor.green = green * argMultiplier;
+	returnColor.blue = blue * argMultiplier;
+	return returnColor;
+}
+Color Color::operator+(Color argColor)
+{
+	Color returnColor;
+	returnColor.red = red * argColor.red;
+	returnColor.green = green * argColor.green;
+	returnColor.blue = blue * argColor.blue;
+	return returnColor;
+}
 
 //Rectangle Struct
-Rectangle::Rectangle() {}
-Rectangle::Rectangle(float argX1, float argX2, float argY1, float argY2)
+Paint::Rectangle::Rectangle() {}
+Paint::Rectangle::Rectangle(float argX1, float argX2, float argY1, float argY2)
 	:x1(argX1), x2(argX2), y1(argY1), y2(argY2) {}
-Rectangle::Rectangle(float argOffsetX, float argOffsetY, float argPixelWidth, float argPixelHeight, int argIndexX, int argIndexY)
+Paint::Rectangle::Rectangle(float argOffsetX, float argOffsetY, float argPixelWidth, float argPixelHeight, int argIndexX, int argIndexY)
 {
 	x1 = argOffsetX + (argIndexX - 0.5f) * argPixelWidth;
 	x2 = argOffsetX + (argIndexX + 0.5f) * argPixelWidth;
@@ -18,7 +34,8 @@ Rectangle::Rectangle(float argOffsetX, float argOffsetY, float argPixelWidth, fl
 }
 
 //CoordinateFloat Struct
-CoordinateFloat::CoordinateFloat() {}
+CoordinateFloat::CoordinateFloat()
+	:x(0.0f), y(0.0f) {}
 CoordinateFloat::CoordinateFloat(float argX, float argY)
 	:x(argX), y(argY) {}
 
@@ -32,7 +49,7 @@ CoordinateInteger convertScreenIntToBufferInt(CoordinateInteger argScreenCoordin
 {
 	CoordinateFloat temp = convertScreenIntToScreenFloat(argScreenCoordinate);
 	if ((temp.x < 0 ? temp.x : -temp.x) < argCanvasOffset.x ||
-		(temp.y < 0 ? temp.y : -temp.y) < argCanvasOffset.y)
+		(temp.y < 0 ? temp.y : -temp.y) < argCanvasOffset.y )
 		return CoordinateInteger(-1, -1);
 	CoordinateInteger returnCoord;
 	returnCoord.x = -argCanvasSize.x / 2.0f / argCanvasOffset.x * temp.x + argCanvasSize.x / 2.0f;
@@ -46,13 +63,8 @@ CoordinateFloat convertScreenIntToScreenFloat(CoordinateInteger argCoordinate)
 	returnCoord.y = 1.0f - argCoordinate.y * 2.0f / (float)screenHeight;
 	return returnCoord;
 }
-template <typename T>
-T maximum(T arg1, T arg2)
+CoordinateInteger convertScreenFloatToBufferInt(CoordinateFloat argCoordinate, CoordinateFloat argCanvasOffset, CoordinateInteger argCanvasSize)
 {
-	return (arg1 > arg2 ? arg1 : arg2);
-}
-template <typename T>
-T minimum(T arg1, T arg2)
-{
-	return (arg1 < arg2 ? arg1 : arg2);
+	CoordinateInteger temp = CoordinateInteger(argCoordinate.x * screenWidth, argCoordinate.y * screenHeight);
+	return convertScreenIntToBufferInt(temp, argCanvasOffset, argCanvasSize);
 }
