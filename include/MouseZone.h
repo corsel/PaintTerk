@@ -37,6 +37,7 @@ class BufferMouseZone : public MouseZone
 {
 private:
 	Buffer *bindedBuffer;
+	bool clicked, rightClicked;
 public:
 	BufferMouseZone(Paint::Rectangle argZone, Buffer *argBindedBuffer = 0);
 	void clickCallback(CoordinateInteger argCoordinate); //virtual implementation

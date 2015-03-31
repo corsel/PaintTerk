@@ -40,12 +40,12 @@ void PixelMatrix::render()
 				bindedBuffer->getPixelSize().y,
 				i, j);
 			glColor3f(tempColor.red, tempColor.green, tempColor.blue);
-         glBegin(GL_QUADS);
-         glVertex2f(tempRect.x1, tempRect.y1);
-         glVertex2f(tempRect.x2, tempRect.y1);
-         glVertex2f(tempRect.x2, tempRect.y2);
-         glVertex2f(tempRect.x1, tempRect.y2);
-         glEnd();
+			glBegin(GL_QUADS);
+			glVertex2f(tempRect.x1, tempRect.y1);
+			glVertex2f(tempRect.x2, tempRect.y1);
+			glVertex2f(tempRect.x2, tempRect.y2);
+			glVertex2f(tempRect.x1, tempRect.y2);
+			glEnd();
 		}
 	}
 }
@@ -79,7 +79,26 @@ void LineStrip::appendVertex(CoordinateFloat argVertex)
 }
 void LineStrip::rasterize()
 {
-	bindedBuffer = 0;
+	for (int i = 0; i < vertexVector.size() - 1; i++)
+	{
+		CoordinateInteger bound1, bound2;
+		bound1 = convertScreenFloatToBufferInt(vertexVector[i], bindedBuffer->getCanvasOffset(), bindedBuffer->getCanvasSize());
+		bound2 = convertScreenFloatToBufferInt(vertexVector[i + 1], bindedBuffer->getCanvasOffset(), bindedBuffer->getCanvasSize());
+		if (bound1.x > bound2.x) PaintMath<CoordinateInteger>::swap(bound1, bound2);
+		for (int j = bound1.x; j < bound2.x; j++)
+		{
+			int tempIndex = (float)bound1.y + ((float)j - (float)bound1.x) / ((float)bound2.x - (float)bound1.x) * ((float)bound2.y - (float)bound1.y);
+			bindedBuffer->paintPixelWithBufferCoordinates(CoordinateInteger(j, -tempIndex), Cursor::getInstance()->color);
+		}
+		
+		if (bound1.y > bound2.y) PaintMath<CoordinateInteger>::swap(bound1, bound2);
+		for (int j = bound1.y; j < bound2.y; j++)
+		{
+			int tempIndex = (float)bound1.y + ((float)j - (float)bound1.y) / ((float)bound2.y - (float)bound1.y) * ((float)bound2.x - (float)bound1.x);
+			bindedBuffer->paintPixelWithBufferCoordinates(CoordinateInteger(j ,tempIndex), Cursor::getInstance()->color);
+		}
+		
+	}
 	vertexVector.clear();
 }
 void LineStrip::render()

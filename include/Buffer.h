@@ -23,6 +23,7 @@ private:
 public:
 	Buffer(int argWidth, int argHeight);
 	void paintPixel(CoordinateInteger argCoordinate, Color argColor);
+	void paintPixelWithBufferCoordinates(CoordinateInteger argCoordinate, Color argColor);
 	CoordinateInteger getCanvasSize(void);
 	CoordinateFloat getCanvasOffset(void);
 	CoordinateFloat getPixelSize(void);

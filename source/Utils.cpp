@@ -65,6 +65,6 @@ CoordinateFloat convertScreenIntToScreenFloat(CoordinateInteger argCoordinate)
 }
 CoordinateInteger convertScreenFloatToBufferInt(CoordinateFloat argCoordinate, CoordinateFloat argCanvasOffset, CoordinateInteger argCanvasSize)
 {
-	CoordinateInteger temp = CoordinateInteger(argCoordinate.x * screenWidth, argCoordinate.y * screenHeight);
+	CoordinateInteger temp = CoordinateInteger((argCoordinate.x + 1.0f) / 2.0f * screenWidth, (argCoordinate.y + 1.0f) / 2.0f * screenHeight);
 	return convertScreenIntToBufferInt(temp, argCanvasOffset, argCanvasSize);
 }

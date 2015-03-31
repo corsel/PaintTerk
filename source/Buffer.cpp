@@ -33,7 +33,20 @@ void Buffer::paintPixel(CoordinateInteger argCoordinate, Color argColor)
 			}
 		}
 	}
-
+}
+void Buffer::paintPixelWithBufferCoordinates(CoordinateInteger argCoordinate, Color argColor)
+{
+	buffer[argCoordinate.x][argCoordinate.y] = Cursor::color;
+	for (int i = 0; i < int(Cursor::brushSize * 10.0f); i++)
+	{
+		for (int j = 0; j < int(Cursor::brushSize * 10.0f); j++)
+		{
+			CoordinateInteger indexBrushSize;
+			indexBrushSize.x = PaintMath<int>::clamp(argCoordinate.x + i, canvasSize.x - 1, 0);
+			indexBrushSize.y = PaintMath<int>::clamp(argCoordinate.y + j, canvasSize.y - 1, 0);
+			buffer[indexBrushSize.x][indexBrushSize.y] = Cursor::color;
+		}
+	}
 }
 CoordinateInteger Buffer::getCanvasSize() {return canvasSize;}
 Color Buffer::getColor(int argX, int argY) {return buffer[argX][argY];}

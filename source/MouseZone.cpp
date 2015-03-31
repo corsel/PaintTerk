@@ -17,22 +17,29 @@ void RectangularMouseZone::clickCallback(CoordinateInteger argCoordinate) //virt
 
 //BufferMouseZone Class
 BufferMouseZone::BufferMouseZone(Paint::Rectangle argZone, Buffer *argBindedBuffer)
-	:MouseZone(argZone), bindedBuffer(argBindedBuffer) {}
+	:MouseZone(argZone), bindedBuffer(argBindedBuffer), clicked(false), rightClicked(false) {}
 void BufferMouseZone::clickCallback(CoordinateInteger argCoordinate) //virtual implementation
 {
 	if (Cursor::getInstance()->tool == Cursor::LINESTRIP)
 	{
 		static LineStrip strip(bindedBuffer, Cursor::getInstance()->color);
 		if (Cursor::getInstance()->state == Cursor::CLICKED &&
+			clicked == false &&
 			Cursor::getInstance()->rightClickState == Cursor::RELEASED)
 		{
+			clicked = true;
 			strip.appendVertex(CoordinateFloat(convertScreenIntToScreenFloat(argCoordinate).x, convertScreenIntToScreenFloat(argCoordinate).y));
 		}
-		if (Cursor::getInstance()->state == Cursor::RELEASED &&
-			Cursor::getInstance()->rightClickState == Cursor::CLICKED)
+		else if (Cursor::getInstance()->state == Cursor::RELEASED)
+			clicked = false;
+		if (Cursor::getInstance()->rightClickState == Cursor::CLICKED &&
+			rightClicked == false)
 		{
+			rightClicked = true;
 			strip.rasterize();
 		}
+		else if (Cursor::getInstance()->rightClickState == Cursor::RELEASED)
+			rightClicked = false;
 	}
 	else if (Cursor::getInstance()->tool == Cursor::BRUSH)
 	{

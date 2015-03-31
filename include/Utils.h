@@ -59,5 +59,12 @@ public:
 	{
 		return argValue < argUpperBound ? (argValue > argLowerBound ? argValue : argLowerBound) : argUpperBound;
 	}
+	static void swap(T &arg1, T &arg2)
+	{
+		T temp;
+		temp = arg1;
+		arg1 = arg2;
+		arg2 = temp;
+	}
 };
 #endif //UTILS_H_INCLUDED
